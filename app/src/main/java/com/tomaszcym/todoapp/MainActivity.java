@@ -4,14 +4,18 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.tomaszcym.todoapp.model.Task;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.PriorityQueue;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,14 +26,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 
     @Override
@@ -47,8 +51,19 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.action_tasks:
+                Log.println(Log.INFO, "Menu: ", "Tasks");
+                return true;
+            case R.id.action_new_task:
+                Task task = new Task("Test", "Jakis opis zadania");
+                Log.println(Log.INFO, "Task: ", '#' + String.valueOf(task.getId()) + " " + task.toString());
+
+                Log.println(Log.INFO, "Menu: ", "New Tasks");
+                return true;
+            case R.id.action_settings:
+                Log.println(Log.INFO, "Menu: ", "Settings");
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

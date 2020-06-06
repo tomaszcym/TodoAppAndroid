@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.tomaszcym.todoapp.FirstFragment"
-        android:label="@string/first_fragment_label"
+        android:name="com.tomaszcym.todoapp.TaskListFragment"
+        android:label="@string/task_list_fragment_label"
         tools:layout="@layout/fragment_first">
 
         <action
@@ -17,8 +17,8 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.tomaszcym.todoapp.SecondFragment"
-        android:label="@string/second_fragment_label"
+        android:name="com.tomaszcym.todoapp.NewTaskFragment"
+        android:label="@string/new_task_fragment_label"
         tools:layout="@layout/fragment_second">
 
         <action
