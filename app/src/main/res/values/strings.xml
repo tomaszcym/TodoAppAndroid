@@ -5,9 +5,20 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="task_list_fragment_label">Task List</string>
-    <string name="new_task_fragment_label">New Task</string>
+    <string name="show_task_fragment_label">Show Task</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+    <string name="task_name">Name</string>
+    <string name="task_value">Value</string>
+    <string name="task_date">Date</string>
+    <string name="task_time">Time</string>
+    <string name="task_status">Status</string>
+
+
+
+    <string name="changeButton">Change</string>
+    <string name="saveButton">Save</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

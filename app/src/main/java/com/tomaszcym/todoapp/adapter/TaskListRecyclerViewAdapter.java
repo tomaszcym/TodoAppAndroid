@@ -1,17 +1,23 @@
 package com.tomaszcym.todoapp.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tomaszcym.todoapp.R;
+import com.tomaszcym.todoapp.TaskListFragment;
 import com.tomaszcym.todoapp.model.Task;
 
 import java.util.Collection;
@@ -42,12 +48,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<TaskListRe
         Task task = this.taskList.get(position);
 
         holder.taskNameTextView.setText(task.getName());
-        holder.statusCheckbox.setEnabled(task.getStatus());
-
-        holder.statusCheckbox.setOnClickListener(e -> {
-            e.setSelected(!task.getStatus());
-//            Log.println(Log.INFO, "status click: ", task.getName());
-        });
+        holder.statusCheckbox.setChecked(task.getStatus());
     }
 
     @Override
@@ -68,15 +69,24 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<TaskListRe
 
             taskNameTextView = itemView.findViewById(R.id.taskNameTextView);
             statusCheckbox = itemView.findViewById(R.id.statusCheckBox);
-//
-//            statusCheckbox.setOnClickListener(e -> {
-////                Log.println(Log.INFO, "status click: ", String.valueOf(getAdapterPosition()));
-//            });
-//
-//            taskNameTextView.setOnClickListener(e -> {
-//                Log.println(Log.INFO, "name click: ", "clicked");
-//            });
-        }
 
+            statusCheckbox.setOnClickListener(v -> {
+                CheckBox checkbox = (CheckBox) v;
+                int position = getAdapterPosition();
+                taskList.get(position).setStatus(checkbox.isChecked());
+
+                Log.println(Log.INFO, "Status checkbox", String.valueOf(taskList.get(position).getStatus()));
+            });
+
+            taskNameTextView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                Task task = taskList.get(position);
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("task_id", task.getId());
+
+                Navigation.findNavController(v).navigate(R.id.action_TaskListFragment_to_ShowTaskFragment, bundle);
+            });
+        }
     }
 }
