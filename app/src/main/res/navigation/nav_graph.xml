@@ -9,7 +9,7 @@
         android:id="@+id/FirstFragment"
         android:name="com.tomaszcym.todoapp.TaskListFragment"
         android:label="@string/task_list_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_task_list">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"

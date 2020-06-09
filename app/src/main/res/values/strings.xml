@@ -4,8 +4,8 @@
     <string name="action_new_task">New Task</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="task_list_fragment_label">First Fragment</string>
-    <string name="new_task_fragment_label">Second Fragment</string>
+    <string name="task_list_fragment_label">Task List</string>
+    <string name="new_task_fragment_label">New Task</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
