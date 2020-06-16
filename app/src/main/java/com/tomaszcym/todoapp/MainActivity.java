@@ -1,5 +1,7 @@
 package com.tomaszcym.todoapp;
 
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -9,6 +11,10 @@ import com.tomaszcym.todoapp.repo.TaskRepository;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -16,6 +22,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import java.util.Optional;
 import java.util.PriorityQueue;
@@ -55,28 +62,15 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        View view =  findViewById(R.id.nav_host_fragment);
+
         //noinspection SimplifiableIfStatement
         switch(id) {
             case R.id.action_tasks:
-
-                RecyclerView rv = (RecyclerView) findViewById(R.id.task_list_recycler_view);
-                Log.println(Log.INFO, "TASKLIST: ", String.valueOf(rv.getAdapter().getItemCount()));
-
-                Log.println(Log.INFO, "Menu: ", "Tasks");
+                Navigation.findNavController(view).navigate(R.id.action_TaskShowFragment_to_TaskListFragment);
                 return true;
             case R.id.action_new_task:
-                Task task = new Task("Test", "Jakis opis zadania");
-                Log.println(Log.INFO, "Task: ", '#' + String.valueOf(task.getId()) + " " + task.toString());
-                Log.println(Log.INFO, "Task:", "Date: " + task.getCreated_date().toString() + " | Time: " + task.getCreated_time().toString());
-
-
-                Log.println(Log.INFO, "TaskList", String.valueOf(TaskRepository.getAll().size()));
-                TaskRepository.addTask(task);
-                Log.println(Log.INFO, "TaskList", String.valueOf(TaskRepository.getAll().size()));
-                Optional<Task> testFromRepo = TaskRepository.getTaskById(1);
-                Log.println(Log.INFO, "TaskList", testFromRepo.map(Task::toString).orElse("Nie znaleziono"));
-
-                Log.println(Log.INFO, "Menu: ", "New Tasks");
+                Navigation.findNavController(view).navigate(R.id.action_TaskListFragment_to_ShowTaskFragment);
                 return true;
             case R.id.action_settings:
                 Log.println(Log.INFO, "Menu: ", "Settings");

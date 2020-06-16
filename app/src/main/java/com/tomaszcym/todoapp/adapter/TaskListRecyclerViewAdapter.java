@@ -47,7 +47,7 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<TaskListRe
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Task task = this.taskList.get(position);
 
-        holder.taskNameTextView.setText(task.getName());
+        holder.taskNameTextView.setText(task.getId() + " | " + task.getName());
         holder.statusCheckbox.setChecked(task.getStatus());
     }
 

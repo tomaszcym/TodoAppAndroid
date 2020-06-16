@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_show_task">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_TaskShowFragment_to_TaskListFragment"
             app:destination="@id/taskListFragment" />
     </fragment>
 </navigation>

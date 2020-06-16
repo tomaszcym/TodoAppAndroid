@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ReportFragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -27,6 +28,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ShowTaskFragment extends Fragment {
@@ -55,31 +57,36 @@ public class ShowTaskFragment extends Fragment {
         this.taskTimeEditText = (EditText) view.findViewById(R.id.taskTimeEditText);
         this.taskStatusCheckbox = (CheckBox) view.findViewById(R.id.taskStatusCheckbox);
 
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+
+
         int id = 0;
         if(getArguments() != null)
             id = getArguments().getInt("task_id");
 
         Optional<Task> repoTask = TaskRepository.getTaskById(id);
 
-        if(!repoTask.isPresent()) {
-            return;
+        Task task = null;
+        if(repoTask.isPresent()) {
+            task = repoTask.get();
+
+            this.taskNameTextInput.setText(task.getName());
+            this.taskValueEditText.setText(task.getValue());
+            if(task.getDate() != null)
+                this.taskDateEditText.setText(task.getDate().format(dateFormat));
+            if(task.getTime() != null)
+                this.taskTimeEditText.setText(task.getTime().format(timeFormat));
+            this.taskStatusCheckbox.setChecked(task.getStatus());
+
+
+            Log.println(Log.INFO, "Show id=", String.valueOf(id));
+        }
+        else {
+            task = new Task();
+            Log.println(Log.INFO, "Show id=", "NEW TASSSSSSSSSSSSSSSSSSSSK!");
         }
 
-        Task task = repoTask.get();
-
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-
-        this.taskNameTextInput.setText(task.getName());
-        this.taskValueEditText.setText(task.getValue());
-        if(task.getDate() != null)
-            this.taskDateEditText.setText(task.getDate().format(dateFormat));
-        if(task.getTime() != null)
-            this.taskTimeEditText.setText(task.getTime().format(timeFormat));
-        this.taskStatusCheckbox.setChecked(task.getStatus());
-
-
-        Log.println(Log.INFO, "Show id=", String.valueOf(id));
 
 
         view.findViewById(R.id.taskDateChangeButton).setOnClickListener(v -> {
@@ -87,7 +94,7 @@ public class ShowTaskFragment extends Fragment {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(Objects.requireNonNull(getActivity()), new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     LocalDate date = LocalDate.of(year, month, dayOfMonth);
@@ -114,16 +121,23 @@ public class ShowTaskFragment extends Fragment {
         });
 
 
+        int finalId = id;
+        Task finalTask = task;
         view.findViewById(R.id.saveButton).setOnClickListener(v -> {
-            task.setName(this.taskNameTextInput.getText().toString());
-            task.setValue(this.taskValueEditText.getText().toString());
+            finalTask.setName(this.taskNameTextInput.getText().toString());
+            finalTask.setValue(this.taskValueEditText.getText().toString());
             if(this.taskDateEditText.getText().toString().length() > 0)
-                task.setDate(LocalDate.parse(this.taskDateEditText.getText().toString(), dateFormat));
+                finalTask.setDate(LocalDate.parse(this.taskDateEditText.getText().toString(), dateFormat));
             if(this.taskTimeEditText.getText().toString().length() > 0)
-                task.setTime(LocalTime.parse(this.taskTimeEditText.getText().toString(), timeFormat));
-            task.setStatus(this.taskStatusCheckbox.isChecked());
+                finalTask.setTime(LocalTime.parse(this.taskTimeEditText.getText().toString(), timeFormat));
+            finalTask.setStatus(this.taskStatusCheckbox.isChecked());
 
-            TaskRepository.update(task.getId(), task);
+            if(finalId != 0)
+                TaskRepository.update(finalTask.getId(), finalTask);
+            else
+                TaskRepository.addTask(finalTask);
+
+            Navigation.findNavController(v).navigate(R.id.action_TaskShowFragment_to_TaskListFragment);
         });
 
     }

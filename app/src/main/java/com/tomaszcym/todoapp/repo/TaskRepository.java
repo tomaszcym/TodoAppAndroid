@@ -62,7 +62,7 @@ public abstract class TaskRepository {
 
 
         int index = taskList.indexOf(repoTask.get());
-        taskList.add(index, task);
+        taskList.set(index, task);
     }
 
 

@@ -25,6 +25,10 @@ public class Task {
     private LocalDate created_date;
     private LocalTime created_time;
 
+    public Task() {
+        this.id = task_id++;
+    }
+
     public Task(String name) {
         this(name, null);
     }
@@ -43,6 +47,8 @@ public class Task {
         this.created_date = LocalDate.now();
         this.created_time = LocalTime.now();
     }
+
+
 
 
     public int getId() {
