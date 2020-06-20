@@ -2,7 +2,10 @@ package com.tomaszcym.todoapp;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,14 +15,12 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ReportFragment;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.tomaszcym.todoapp.model.Task;
 import com.tomaszcym.todoapp.repo.TaskRepository;
 
@@ -27,7 +28,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -88,7 +88,6 @@ public class ShowTaskFragment extends Fragment {
         }
 
 
-
         view.findViewById(R.id.taskDateChangeButton).setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -124,6 +123,10 @@ public class ShowTaskFragment extends Fragment {
         int finalId = id;
         Task finalTask = task;
         view.findViewById(R.id.saveButton).setOnClickListener(v -> {
+
+            if(!this.isTaskNameValid(this.taskNameTextInput))
+                return;
+
             finalTask.setName(this.taskNameTextInput.getText().toString());
             finalTask.setValue(this.taskValueEditText.getText().toString());
             if(this.taskDateEditText.getText().toString().length() > 0)
@@ -132,13 +135,55 @@ public class ShowTaskFragment extends Fragment {
                 finalTask.setTime(LocalTime.parse(this.taskTimeEditText.getText().toString(), timeFormat));
             finalTask.setStatus(this.taskStatusCheckbox.isChecked());
 
-            if(finalId != 0)
-                TaskRepository.update(finalTask.getId(), finalTask);
-            else
-                TaskRepository.addTask(finalTask);
+            Context context = getContext();
+            CharSequence text = "";
+
+            if(finalId != 0) {
+                try {
+                    TaskRepository.update(finalTask.getId(), finalTask);
+                    if(context != null)
+                        text = context.getString(R.string.update_task__success);
+                }
+                catch (Exception e) {
+                    Log.println(Log.ERROR, "ShowTaskFragment::saveButton::clickListener", "Error when update new task");
+                    if(context != null)
+                        text = context.getString(R.string.update_task__error);
+                }
+            }
+            else {
+                try {
+                    TaskRepository.addTask(finalTask);
+                    if(context != null)
+                        text = context.getString(R.string.new_task__success);
+                }
+                catch (Exception e) {
+                    Log.println(Log.ERROR, "ShowTaskFragment::saveButton::clickListener", "Error when adding new task");
+                    if(context != null)
+                        text = context.getString(R.string.new_task__error);
+                }
+            }
+
+            if(context == null) {
+                Log.println(Log.WARN, "ShowTaskFragment::saveButton::clickListener", "Context is null! Toasts will not be shown.");
+            }
+            else {
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+            }
 
             Navigation.findNavController(v).navigate(R.id.action_TaskShowFragment_to_TaskListFragment);
         });
 
+    }
+
+    private boolean isTaskNameValid(EditText input) {
+        if(input.getText().toString().length() < 3) {
+            Context context = getContext();
+            if(context != null) {
+                CharSequence text = context.getString(R.string.task_name_length_validator, 3);
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }
+        return true;
     }
 }

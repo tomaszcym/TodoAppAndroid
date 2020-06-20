@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/user">
+
+        <EditTextPreference
+            app:key="userTitle"
+            app:defaultValue="132123"
+            app:title="@string/user_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/theme_title">
+
+        <EditTextPreference
+            app:key="appBackgroundColor"
+            app:title="@string/theme_background_color"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

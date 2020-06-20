@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -74,6 +75,13 @@ public class TaskListRecyclerViewAdapter extends RecyclerView.Adapter<TaskListRe
                 CheckBox checkbox = (CheckBox) v;
                 int position = getAdapterPosition();
                 taskList.get(position).setStatus(checkbox.isChecked());
+
+                Context context = v.getContext();
+                if(context != null) {
+                    String status = taskList.get(position).getStatus() ? "completed" : "uncompleted";
+                    CharSequence text = "Task is now " + status + ".";
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                }
 
                 Log.println(Log.INFO, "Status checkbox", String.valueOf(taskList.get(position).getStatus()));
             });

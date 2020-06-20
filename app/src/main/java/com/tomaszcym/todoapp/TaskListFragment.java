@@ -1,14 +1,19 @@
 package com.tomaszcym.todoapp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,11 +39,27 @@ public class TaskListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        TextView listTitle = view.findViewById(R.id.listViewTextView);
+        String name = sharedPreferences.getString("userTitle", "");
+        if(name.trim().equals(""))
+            name = getContext().getString(R.string.task_list_fragment_label);
+        else
+            name = "Hi " + name + "! Your tasks:";
+        listTitle.setText(name);
+
+
         taskListRecyclerView = (RecyclerView) view.findViewById(R.id.task_list_recycler_view);
 
         TaskListRecyclerViewAdapter taskListRecyclerViewAdapter = new TaskListRecyclerViewAdapter((List<Task>) TaskRepository.getAll());
         taskListRecyclerView.setAdapter(taskListRecyclerViewAdapter);
         taskListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        view.findViewById(R.id.newTaskButton).setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_TaskListFragment_to_ShowTaskFragment);
+        });
 
 
 //        view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {

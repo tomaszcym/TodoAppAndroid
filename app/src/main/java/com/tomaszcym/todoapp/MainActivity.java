@@ -1,7 +1,10 @@
 package com.tomaszcym.todoapp;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -23,6 +27,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.Optional;
 import java.util.PriorityQueue;
@@ -37,6 +42,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TaskRepository.init();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String colorName = sharedPreferences.getString("appBackgroundColor", "");
+        int color = 0;
+        try {
+            color = Color.parseColor(colorName);
+        }
+        catch (Exception e) {
+            if(colorName.trim().length() > 0) {
+                String text = this.getString(R.string.unknown_color);
+                Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+            }
+
+            color = Color.parseColor("#ffffff");
+        }
+
+        findViewById(R.id.activityMain).setBackgroundColor(color);
 
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -66,14 +88,15 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch(id) {
-            case R.id.action_tasks:
-                Navigation.findNavController(view).navigate(R.id.action_TaskShowFragment_to_TaskListFragment);
-                return true;
-            case R.id.action_new_task:
-                Navigation.findNavController(view).navigate(R.id.action_TaskListFragment_to_ShowTaskFragment);
-                return true;
+//            case R.id.action_tasks:
+//                Navigation.findNavController(view).navigate(R.id.action_TaskShowFragment_to_TaskListFragment);
+//                return true;
+//            case R.id.action_new_task:
+//                Navigation.findNavController(view).navigate(R.id.action_TaskListFragment_to_ShowTaskFragment);
+//                return true;
             case R.id.action_settings:
-                Log.println(Log.INFO, "Menu: ", "Settings");
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
                 return true;
         }
 

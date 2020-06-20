@@ -28,6 +28,7 @@ public abstract class TaskRepository {
                     firstTask,
                     new Task("Zakupy", "Zrobić zakupy na grilla."),
                     new Task("Umyć samochód"),
+                    new Task("Umyć samochód"),
                     new Task("Zrobić projekt", "Projekt na przedmiot aplikacje mobline. Aplikacja TODO w Java'ie.")
             ));
             isInitialized = true;
@@ -38,8 +39,8 @@ public abstract class TaskRepository {
     //    ======================
 //    MODIFIERS
 //    ======================
-    public static boolean addTask(Task task) {
-        return taskList.add(task);
+    public static void addTask(Task task) {
+        taskList.add(task);
     }
 
     public static boolean removeById(int id) {
